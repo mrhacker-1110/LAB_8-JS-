@@ -1,123 +1,111 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Home Works</title>
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/core.css">
-    <link rel="stylesheet" href="../css/home_works.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Homework | RadoMir</title>
+    <link rel="stylesheet" href="../css/core.css"/>
+    <link rel="stylesheet" href="../css/home_works.css"/>
 </head>
 <body>
 
 <div class="wrapper">
-    <div class="header">
+
+    <!-- HEADER — КАК В index.html -->
+    <header class="header">
         <div class="container">
-            <div class="inner_header">
-                <a href="../index.html">
-                    <div class="logotype">
-                        <h2>Java<span>Script</span></h2>
-                    </div>
+            <div class="header__inner">
+                <a href="../index.html" class="logo">
+                    <h2>Java<span>Script</span></h2>
                 </a>
-                <ul class="menu">
-                    <li class="menu_link">
-                        <a href="../pages/home_works.html">Home Works</a>
-                    </li>
-                    <li class="menu_link">
-                        <a href="../pages/lessons.html">Lessons</a>
-                    </li>
-                    <li class="menu_link">
-                        <a href="" target="_blank">Send hw</a>
-                    </li>
-                </ul>
+                <nav class="nav">
+                    <ul class="nav__list">
+                        <li class="nav__item"><a href="home_works.html" class="nav__link active">Homework</a></li>
+                        <li class="nav__item"><a href="lessons.html" class="nav__link">Lessons</a></li>
+                        <li class="nav__item"><a href="send_hw.html" class="nav__link">Send HW</a></li>
+                    </ul>
+                </nav>
                 <button class="btn" id="btn-get">Click me!</button>
             </div>
         </div>
-    </div>
-    <div class="gmail_block">
+    </header>
+
+    <!-- 1. GMAIL CHECKER -->
+    <section class="section gmail-section">
         <div class="container">
-            <h3>Home work 1 (part 1)</h3>
-            <div class="inner_gmail_block">
-                <div class="form_gmail">
-                    <label for="gmail_input"></label>
-                    <input type="text" id="gmail_input" placeholder="your gmail">
-                    <button class="btn" id="gmail_button">Check gmail</button>
-                    <span class="checker" id="gmail_result"></span>
-                </div>
+            <h3>Gmail Checker</h3>
+            <div class="gmail-box">
+                <input type="text" id="gmail_input" placeholder="Enter Gmail..." />
+                <button class="btn" id="gmail_button">Check</button>
+                <span id="gmail_result"></span>
             </div>
         </div>
-    </div>
+    </section>
 
-
-    <div class="gmail_block">
+    <!-- 1.1 IIN CHECKER -->
+    <section class="section iin-section">
         <div class="container">
-            <h3>Home work 1 (part 1.1)</h3>
-            <div class="inner_gmail_block">
-                <div class="form_gmail">
-                    <label for="gmail_input"></label>
-                    <input type="text" id="gmail_input" placeholder="ИИН">
-                    <button class="btn" id="gmail_button">Проверка ИИН</button>
-                    <span class="checker" id="gmail_result"></span>
-                </div>
+            <h3>IIN Checker</h3>
+            <div class="gmail-box">
+                <input type="text" id="iin_input" placeholder="Enter IIN..." />
+                <button class="btn" id="iin_button">Check IIN</button>
+                <span id="iin_result"></span>
             </div>
         </div>
-    </div>
+    </section>
 
-
-    <div class="move_block">
+    <!-- 2. MOVING SQUARE -->
+    <section class="section move-section">
         <div class="container">
-            <h3>Home work 1 (part 2)</h3>
-            <div class="inner_move_block">
+            <h3>Moving Square</h3>
+            <div class="move-box">
                 <div class="parent_block">
                     <div class="child_block"></div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="stopwatch">
+    </section>
+
+    <!-- 3. STOPWATCH -->
+    <section class="section stopwatch-section">
         <div class="container">
-            <h3>Home work 2 </h3>
-            <div class="time">
-                <div class="time_block">
-                    <div class="interval" id="minutesS">00</div>
-                    <div class="break">:</div>
-                    <div class="interval" id="secondsS">00</div>
-                    <div class="break">:</div>
-                    <div class="interval" id="ml-secondsS">00</div>
-                </div>
+            <h3>Stopwatch</h3>
+            <div class="stopwatch-display">
+                <span id="minutesS">00</span>:<span id="secondsS">00</span>.<span id="ml-secondsS">00</span>
             </div>
-            <div class="time_buttons">
+            <div class="stopwatch-buttons">
                 <button class="btn" id="start">Start</button>
                 <button class="btn" id="stop">Stop</button>
                 <button class="btn" id="reset">Reset</button>
             </div>
         </div>
-    </div>
-    <div class="footer">
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
         <div class="container">
-            <a href="" target="_blank">
-                <div class="inner_footer">
-                    <h2>Made by </h2>
-                </div>
-            </a>
+            <p>Made with ❤️ by <strong>KUBA</strong></p>
         </div>
-    </div>
+    </footer>
 </div>
 
+<!-- МОДАЛКА -->
 <div class="modal">
     <div class="modal_dialog">
         <div class="modal_content">
             <form action="#">
                 <div class="modal_close">&times;</div>
                 <div class="modal_title">Мы свяжемся с вами как можно быстрее!</div>
-                <input required placeholder="Ваше имя" name="name" type="text" class="modal_input">
-                <input required placeholder="Ваш номер телефона" name="phone" type="phone" class="modal_input">
-                <button class="btn btn_dark btn_min">Перезвонить мне</button>
+                <input required placeholder="Ваше имя" name="fullname" type="text" class="modal_input">
+                <input required placeholder="Ваш номер телефона" name="phone_number" type="tel" class="modal_input">
+                <button class="btn btn_min">Перезвонить мне</button>
             </form>
         </div>
     </div>
 </div>
 
-</body>
 <script src="../js/home_works.js"></script>
+<script src="../js/main.js"></script>
 <script src="../js/modal.js"></script>
+</body>
 </html>

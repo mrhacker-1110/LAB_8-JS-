@@ -1,34 +1,169 @@
-body,
-html {
+/* === VARIABLES === */
+:root {
+    --orange: #ff6b35;
+    --dark: #0f0f0f;
+    --radius: 16px;
+    --transition: all 0.3s ease;
+}
+
+/* === BASE === */
+* {
     margin: 0;
     padding: 0;
-    position: fixed;
-    background: black;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
 }
 
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background: var(--dark);
+    height: 100%;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* === HEADER === */
 .header {
-    position: static !important;
-}
-
-.buymeacoffee {
-    text-decoration: none;
     position: fixed;
-    right: 2rem;
-    bottom: 2rem;
-    background: #FFDD00;
-    width: 3.5rem;
-    height: 3.5rem;
-    border-radius: 50%;
-    transition: all 0.1s linear;
-    box-shadow: 0.2rem 0.2rem 0.5rem rgba(0, 0, 0, 0.2);
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 25px 0;
+    background: rgba(17, 17, 17, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid #333;
     z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
-.buymeacoffee:hover {
-    width: 4rem;
-    height: 4rem;
-    line-height: 4rem;
+.header-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo h2 {
+    color: white;
+    font-size: 1.8rem;
+}
+
+.logo span {
+    color: var(--orange);
+}
+
+.nav a {
+    color: #ccc;
+    text-decoration: none;
+    margin: 0 20px;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.nav a:hover {
+    color: var(--orange);
+}
+
+.btn-primary {
+    background: var(--orange);
+    color: black;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-primary:hover {
+    background: white;
+    transform: translateY(-2px);
+}
+
+/* === MONSTER SECTION === */
+.monster-section {
+    position: relative;
+    width: 100%;
+    height: calc(100vh - 80px);
+    margin-top: 80px;
+    overflow: hidden;
+}
+
+#canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #0a0a0a;
+}
+
+.info {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    background: rgba(26, 26, 26, 0.9);
+    padding: 20px 40px;
+    border-radius: 20px;
+    border: 2px solid var(--orange);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 30px rgba(255, 107, 53, 0.2);
+    z-index: 10;
+    max-width: 90%;
+}
+
+.info h3 {
+    color: var(--orange);
+    font-size: 2rem;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.info p {
+    color: #ddd;
+    font-size: 1.1rem;
+}
+
+/* === FOOTER === */
+.footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px 0;
+    background: rgba(17, 17, 17, 0.95);
+    border-top: 1px solid #333;
+    text-align: center;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+}
+
+.footer p {
+    color: #aaa;
+    font-size: 0.9rem;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+    .info {
+        padding: 15px 25px;
+        bottom: 20px;
+    }
+    .info h3 {
+        font-size: 1.6rem;
+    }
+    .info p {
+        font-size: 1rem;
+    }
+    .nav a {
+        margin: 0 10px;
+        font-size: 0.9rem;
+    }
 }

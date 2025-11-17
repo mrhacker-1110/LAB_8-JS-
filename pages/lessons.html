@@ -1,184 +1,236 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Lessons</title>
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/core.css">
-    <link rel="stylesheet" href="../css/lessons.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS Lessons | KUBA 2025</title>
+    <style>
+        :root { --orange:#ff6b35; --dark:#0f0f0f; }
+        * { margin:0; padding:0; box-sizing:border-box; font-family:Segoe UI,sans-serif; }
+        body { background:var(--dark); color:white; line-height:1.6; }
+        .container { max-width:1200px; margin:0 auto; padding:0 20px; }
+
+        /* HEADER + MENU */
+        .header { background:#111; padding:20px 0; border-bottom:2px solid #333; }
+        .header__inner { display:flex; justify-content:space-between; align-items:center; }
+        .logo h2 { font-size:2rem; }
+        .logo span { color:var(--orange); }
+        .nav__list { display:flex; gap:40px; list-style:none; }
+        .nav__link { color:#ccc; text-decoration:none; font-weight:600; font-size:1.1rem; }
+        .nav__link.active, .nav__link:hover { color:var(--orange); }
+        .btn { background:var(--orange); color:black; border:none; padding:12px 28px; border-radius:12px; font-weight:bold; cursor:pointer; }
+
+        h3 { text-align:center; color:var(--orange); font-size:2.2rem; margin:60px 0 40px; text-transform:uppercase; }
+
+        /* Phone Checker */
+        .phone-box { background:#1a1a1a; padding:35px; border-radius:20px; border:3px solid var(--orange); max-width:420px; margin:0 auto 60px; text-align:center; }
+        #phone_input { width:100%; padding:16px; background:#222; border:none; border-radius:12px; color:white; font-size:18px; margin:15px 0; }
+        #phone_result { display:block; margin-top:15px; font-size:18px; font-weight:bold; }
+
+        /* Converter */
+        .converter-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:25px; max-width:700px; margin:0 auto 80px; }
+        .converter-grid > div { background:#1a1a1a; padding:25px; border-radius:18px; border:3px solid var(--orange); text-align:center; }
+        .converter-grid input { width:100%; padding:14px; background:#222; border:none; border-radius:10px; color:white; font-size:20px; text-align:center; }
+
+        /* Card Switcher */
+        .card-switcher { display:flex; justify-content:center; align-items:center; gap:30px; flex-wrap:wrap; margin:50px 0; }
+        .card { width:400px; background:#1a1a1a; border:4px solid var(--orange); border-radius:28px; padding:30px; text-align:center; }
+        .card img { width:180px; height:180px; border-radius:50%; border:6px solid var(--orange); object-fit:cover; }
+        .status { padding:10px 20px; border-radius:50px; font-weight:bold; margin:15px 0; display:inline-block; }
+        .online { background:#4ade80; color:black; }
+        .offline { background:#f87171; color:white; }
+
+        /* Погода */
+        .weather-main { max-width:560px; margin:0 auto; text-align:center; position:relative; }
+        #cityInput { width:100%; padding:22px 50px; font-size:19px; background:#0f0f0f; border:3px solid var(--orange); border-radius:24px; color:white; text-align:center; outline:none; margin-bottom:30px; }
+        .dropdown { position:absolute; top:100%; left:50%; transform:translateX(-50%); width:560px; background:#0f0f0f; border:3px solid var(--orange); border-top:none; border-radius:0 0 24px 24px; max-height:320px; overflow-y:auto; display:none; z-index:999; }
+        .dropdown div { padding:18px; cursor:pointer; border-bottom:1px solid #333; }
+        .dropdown div:hover { background:var(--orange); color:black; }
+        .weather-card { background:linear-gradient(135deg,#1e1e2e,#16213e); padding:50px 30px; border-radius:32px; border:4px solid var(--orange); }
+        .city-title { font-size:42px; color:var(--orange); font-weight:900; }
+        .temperature { font-size:100px; font-weight:900; margin:15px 0; }
+        .weather-text { font-size:24px; color:#00d4ff; font-weight:600; }
+        .quick-buttons { display:flex; flex-wrap:wrap; gap:14px; justify-content:center; margin-top:30px; }
+        .quick-buttons button { background:#111; color:white; border:2px solid var(--orange); padding:12px 24px; border-radius:50px; cursor:pointer; font-weight:600; }
+        .quick-buttons button:hover { background:var(--orange); color:black; transform:translateY(-4px); }
+
+        .footer { text-align:center; padding:60px 0; color:#aaa; margin-top:100px; }
+    </style>
 </head>
 <body>
 
 <div class="wrapper">
-    <div class="header">
+
+    <!-- ВЕРХНЕЕ МЕНЮ -->
+    <header class="header">
         <div class="container">
-            <div class="inner_header">
-                <a href="../index.html">
-                    <div class="logotype">
-                        <h2>Java<span>Script</span></h2>
-                    </div>
-                </a>
-                <ul class="menu">
-                    <li class="menu_link">
-                        <a href="../pages/home_works.html">Home Works</a>
-                    </li>
-                    <li class="menu_link">
-                        <a href="../pages/lessons.html">Lessons</a>
-                    </li>
-                    <li class="menu_link">
-                        <a href="" target="_blank">Send hw</a>
-                    </li>
-                </ul>
+            <div class="header__inner">
+                <a href="../index.html" class="logo"><h2>Java<span>Script</span></h2></a>
+                <nav class="nav">
+                    <ul class="nav__list">
+                        <li><a href="home_works.html" class="nav__link">Homework</a></li>
+                        <li><a href="lessons.html" class="nav__link active">Lessons</a></li>
+                        <li><a href="send_hw.html" class="nav__link">Send HW</a></li>
+                    </ul>
+                </nav>
                 <button class="btn" id="btn-get">Click me!</button>
             </div>
         </div>
-    </div>
+    </header>
 
-    <div class="phone_block">
-        <div class="container">
-            <h3>Phone checker</h3>
-            <div class="inner_phone_block">
-                <div class="form_phone">
-                    <input type="text" id="phone_input" placeholder="+996 XXX XX-XX-XX">
-                    <button class="btn" id="phone_button">Check number</button>
-                    <span class="checker" id="phone_result"></span>
-                </div>
+    <div class="container">
+
+        <!-- 1. Phone Checker -->
+        <h3>Phone Checker</h3>
+        <div class="phone-box">
+            <input type="text" id="phone_input" placeholder="+996 550 12-34-56">
+            <button class="btn" id="phone_button">Проверить</button>
+            <span id="phone_result"></span>
+        </div>
+
+        <!-- 2. Конвертер валют -->
+        <h3>Конвертер валют</h3>
+        <div class="converter-grid">
+            <div><label>SOM</label><input type="number" id="som" placeholder="0"></div>
+            <div><label>USD</label><input type="number" id="usd" placeholder="0"></div>
+            <div><label>EUR</label><input type="number" id="eur" placeholder="0"></div>
+        </div>
+
+        <!-- 3. Card Switcher — Крутой -->
+        <h3>Card Switcher 2025</h3>
+        <div class="card-switcher">
+            <button class="btn" id="prev">←</button>
+            <div class="card">
+                <img src="https://randomuser.me/api/portraits/men/1.jpg" alt="">
+                <h3>Загрузка...</h3>
+                <p>Город: —</p>
+                <div class="status offline">Offline</div>
+            </div>
+            <button class="btn" id="next">→</button>
+        </div>
+
+        <!-- 4. Погода Чуйская область -->
+        <h3>Погода в Чуйской области</h3>
+        <div class="weather-main">
+            <input type="text" id="cityInput" placeholder="Введи город: Бишкек, Кант, Токмок, Аламедин...">
+            <div id="dropdown" class="dropdown"></div>
+
+            <div class="weather-card">
+                <h2 class="city-title">Бишкек</h2>
+                <div class="weather-icon" style="font-size:80px;margin:20px 0;">Sunny</div>
+                <div class="temperature">—</div>
+                <p class="weather-text">Салам, брат! Выбирай город</p>
+            </div>
+
+            <div class="quick-buttons">
+                <button data-city="Бишкек">Бишкек</button>
+                <button data-city="Кант">Кант</button>
+                <button data-city="Токмок">Токмок</button>
+                <button data-city="Кара-Балта">Кара-Балта</button>
+                <button data-city="Аламедин">Аламедин</button>
+                <button data-city="Сокулук">Сокулук</button>
             </div>
         </div>
-    </div>
 
-        <div class="phone_block">
-        <div class="container">
-            <h3>Phone checker Russian Numbers</h3>
-            <div class="inner_phone_block">
-                <div class="form_phone">
-                    <input type="text" id="phone_input" placeholder="+7 922 ХХХ-ХХ-ХХ">
-                    <button class="btn" id="phone_button">Check number</button>
-                    <span class="checker" id="phone_result"></span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="tab_slider">
-        <div class="container">
-          <h3>Tab Slider (Фото + Описание)</h3>
-          <div class="inner_tab_slider">
-            <div class="tab_contents_block">
-              <div class="tab_content_block">
-                <a href="../phote/111.jpg" target="_blank">
-                  <img src="../phote/111.jpg" alt="Рассвет над горами">
-                </a>
-                <p>Лес — это удивительное место, где растут высокие деревья и поют птицы. Здесь можно дышать свежим воздухом и слушать шелест листвы. Лес защищает землю от ветра и сохраняет воду.</p>
-              </div>
-              <div class="tab_content_block">
-                <a href="../phote/222.jpg" target="_blank">
-                  <img src="../phote/222.webp" alt="Озеро на закате">
-                </a>
-                <p>Река течет через поля и леса, принося жизнь растениям и животным. Вода в реке прозрачная и прохладная, а летом дети любят купаться в ней. Река — источник пищи и отдыха для многих.</p>
-              </div>
-              <div class="tab_content_block">
-                <a href="../phote/3333.jpeg" target="_blank">
-                  <img src="../phote/3333.jpeg" alt="Осенняя аллея">
-                </a>
-                <p>Горы величественные и красивые. На их вершинах лежит снег, а с низов растут цветы и деревья. В горах чистый воздух, и люди приходят сюда, чтобы отдыхать и смотреть на природу.</p>
-              </div>
-              <div class="tab_content_block">
-                <a href="../phote/444.jpg" target="_blank">
-                  <img src="../phote/444.jpg" alt="Ночной город">
-                </a>
-                <p>Озеро спокойно отражает небо и деревья вокруг. Здесь плавают утки и рыбы. Вечером на озере красиво светит луна, а вода становится тихой и спокойной.</p>
-              </div>
-              <div class="tab_content_block">
-                <a href="../phote/555.jpg" target="_blank">
-                  <img src="../phote/5555.jpg" alt="Цветущий сад">
-                </a>
-                <p>Поле полно зелёной травы и цветов. Летом здесь летают бабочки и жужжат пчёлы. Поле дарит людям продукты и красоту природы.</p>
-              </div>
-              <div class="tab_content_items">
-                <div class="tab_content_item tab_content_item_active">Фото 1</div>
-                <div class="tab_content_item">Фото 2</div>
-                <div class="tab_content_item">Фото 3</div>
-                <div class="tab_content_item">Фото 4</div>
-                <div class="tab_content_item">Фото 5</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    <div class="converter">
-        <div class="container">
-            <h3>CONVERTER</h3>
-            <div class="inner_converter">
-                <div class="som">
-                    <label for="som">Som</label>
-                    <input type="number" id="som">
-                </div>
-                <div class="usd">
-                    <label for="usd">Usd</label>
-                    <input type="number" id="usd">
-                </div>
-                <div class="eur">
-                    <label for="eur">Eur</label>
-                    <input type="number" id="eur">
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="card_switcher">
-        <div class="container">
-            <h3>Card Switcher</h3>
-            <div class="inner_card_switcher">
-                <button class="btn" id="btn-prev">prev</button>
-                <div class="card"></div>
-                <button class="btn" id="btn-next">next</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="weather">
-        <div class="container">
-            <div class="inner_weather">
-                <div>
-                    <input type="text" class="cityName" placeholder="Найти погоду в...">
-                </div>
-                <div>
-                    <span class="city"></span>
-                    <hr>
-                    <span class="temp"></span>
-                </div>
-            </div>
-        </div>
     </div>
 
     <div class="footer">
-        <div class="container">
-            <a href="" target="_blank">
-                <div class="inner_footer">
-                    <h2>Made by </h2>
-                </div>
-            </a>
-        </div>
+        <p>Made with ❤️ by <strong>KUBA</strong> | Чуйская область 2025</p>
     </div>
 </div>
 
-<div class="modal">
-    <div class="modal_dialog">
-        <div class="modal_content">
-            <form action="#">
-                <div class="modal_close">&times;</div>
-                <div class="modal_title">Мы свяжемся с вами как можно быстрее!</div>
-                <input required placeholder="Ваше имя" name="name" type="text" class="modal_input">
-                <input required placeholder="Ваш номер телефона" name="phone" type="phone" class="modal_input">
-                <button class="btn btn_dark btn_min">Перезвонить мне</button>
-            </form>
-        </div>
-    </div>
-</div>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
 
+    // Phone Checker
+    document.getElementById("phone_button").onclick = () => {
+        const val = document.getElementById("phone_input").value.trim();
+        const ok = /^\+996\s?[2579]\d{2}\s?\d{2}-\d{2}-\d{2}$/.test(val);
+        const res = document.getElementById("phone_result");
+        res.textContent = ok ? "Правильный номер ✅" : "Неправильный формат ❌";
+        res.style.color = ok ? "#4ade80" : "#f87171";
+    };
+
+    // Конвертер валют
+    const rates = { usd: 89.5, eur: 97.2 };
+    const som = document.getElementById("som"), usd = document.getElementById("usd"), eur = document.getElementById("eur");
+    const convert = () => {
+        const s = parseFloat(som.value)||0, u = parseFloat(usd.value)||0, e = parseFloat(eur.value)||0;
+        if(s>0){ usd.value=(s/rates.usd).toFixed(2); eur.value=(s/rates.eur).toFixed(2); }
+        else if(u>0){ som.value=(u*rates.usd).toFixed(0); eur.value=(u*rates.usd/rates.eur).toFixed(2); }
+        else if(e>0){ som.value=(e*rates.eur).toFixed(0); usd.value=(e*rates.eur/rates.usd).toFixed(2); }
+    };
+    som.oninput = usd.oninput = eur.oninput = convert;
+
+    // Card Switcher
+    let id = 1;
+    const card = document.querySelector(".card");
+    const load = async () => {
+        const res = await fetch(`https://randomuser.me/api/?seed=user${id}`);
+        const d = await res.json();
+        const u = d.results[0];
+        card.innerHTML = `
+            <img src="${u.picture.large}" alt="">
+            <h3>${u.name.first} ${u.name.last}</h3>
+            <p>Возраст: ${u.dob.age}</p>
+            <p>Город: ${u.location.city}</p>
+            <div class="status ${Math.random()>0.5?'online':'offline'}">${Math.random()>0.5?'Online':'Offline'}</div>
+        `;
+    };
+    document.getElementById("prev").onclick = () => { id = id<=1?50:id-1; load(); };
+    document.getElementById("next").onclick = () => { id = id>=50?1:id+1; load(); };
+    load();
+
+    // Погода Чуйка
+    const cities = {
+        "Бишкек":"42.8746,74.5698","Кант":"42.8833,74.8500","Токмок":"42.8333,75.2833",
+        "Кара-Балта":"42.8167,73.8667","Аламедин":"42.8891,74.6222","Сокулук":"42.8167,74.3833"
+    };
+    const input = document.getElementById("cityInput");
+    const drop = document.getElementById("dropdown");
+    const title = document.querySelector(".city-title");
+    const temp = document.querySelector(".temperature");
+    const text = document.querySelector(".weather-text");
+    const icon = document.querySelector(".weather-icon");
+
+    const emojis = {0:"Sunny",1:"Mostly Sunny",2:"Partly Cloudy",3:"Cloudy",45:"Fog",61:"Rain",71:"Snow",95:"Thunderstorm"};
+
+    async function show(city) {
+        const [lat,lon] = cities[city].split(",");
+        const r = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weathercode&timezone=Asia/Bishkek`);
+        const d = await r.json();
+        const t = Math.round(d.current.temperature_2m);
+        const c = d.current.weathercode;
+        title.textContent = city;
+        temp.textContent = (t>0?"+":"")+t+"°";
+        text.textContent = `Салам, брат! В ${city} щас ${t>0?"+":""}${t}°C — гуляй спокойно`;
+        icon.textContent = emojis[c] || "Clouds";
+    }
+
+    input.oninput = () => {
+        const v = input.value.toLowerCase();
+        drop.innerHTML = "";
+        if(!v){ drop.style.display="none"; return; }
+        const m = Object.keys(cities).filter(c=>c.toLowerCase().includes(v));
+        if(m.length){
+            drop.style.display="block";
+            m.forEach(c=>{ const div=document.createElement("div"); div.textContent=c;
+                div.onclick=()=>{ input.value=c; drop.style.display="none"; show(c); };
+                drop.appendChild(div);
+            });
+        }else drop.style.display="none";
+    };
+
+    document.querySelectorAll(".quick-buttons button").forEach(b=>{
+        b.onclick=()=>{ input.value=b.dataset.city; drop.style.display="none"; show(b.dataset.city); };
+    });
+
+    document.addEventListener("click", e=>{
+        if(!input.contains(e.target) && !drop.contains(e.target)) drop.style.display="none";
+    });
+
+    show("Бишкек");
+});
+</script>
 </body>
-<script src="../js/lesson.js"></script>
-<script src="../js/modal.js"></script>
 </html>

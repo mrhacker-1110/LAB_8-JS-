@@ -1,77 +1,81 @@
-// RANDOM COLOR GENERATOR
+// === КЛИК ПО КНОПКЕ → МЕНЯЕТ ЦВЕТ НА ТОТ ЖЕ ===
+document.addEventListener('DOMContentLoaded', () => {
+    const jsColorText = document.getElementById('js-color');
+    const colorButtons = document.querySelectorAll('.btn-color');
 
-const buttonsColor = document.querySelectorAll('.btn-color')
-const javaScript = document.querySelector('#js-color')
+    if (!jsColorText || colorButtons.length === 0) return;
 
-const generateRandomColor = () => {
-    const hexCodes = '0123456789ABCDEF'
-    let color = ''
-    for (let i = 0; i < 6; i++) {
-        color += hexCodes[Math.floor(Math.random() * hexCodes.length)]
+    jsColorText.style.transition = 'color 0.5s ease';
+
+    colorButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const hex = button.querySelector('span').textContent.trim();
+            jsColorText.style.color = hex;
+        });
+    });
+});
+
+// === ПРОБЕЛ (SPACE) → РАНДОМНЫЙ ЦВЕТ ===
+document.addEventListener('keydown', (e) => {
+    if (e.code === 'Space' && e.target === document.body) {
+        e.preventDefault();
+        const jsColorText = document.getElementById('js-color');
+        if (!jsColorText) return;
+
+        const colors = ['#FF6B35', '#00FF88', '#FF00FF', '#00D4FF', '#FFD700', '#FF4500'];
+        const randomColor = colors[Math.floor(Math.random() * colors.length)];
+        jsColorText.style.color = randomColor;
     }
-    return '#' + color
-}
+});
 
-const setRandomColors = () => {
-    buttonsColor.forEach((buttonColor) => {
-        buttonColor.innerHTML = generateRandomColor()
-        buttonColor.onclick = (event) => {
-            javaScript.style.color = event.target.innerHTML
-        }
-    })
-}
+// === СЛАЙДЕР ===
+document.addEventListener('DOMContentLoaded', () => {
+    const slides = document.querySelectorAll('.slide');
+    if (slides.length === 0) return;
 
-window.onload = () => setRandomColors()
-window.onkeydown = (event) => {
-    if (event.code.toLowerCase() === 'space') {
-        event.preventDefault()
-        setRandomColors()
-    }
-}
+    const prevBtn = document.getElementById('prev');
+    const nextBtn = document.getElementById('next');
+    let currentSlide = 0;
+    let autoSlideInterval;
 
-// SLIDER BLOCK
+    const showSlide = (index) => {
+        slides.forEach((slide, i) => {
+            slide.classList.toggle('active_slide', i === index);
+        });
+    };
 
-const slides = document.querySelectorAll('.slide')
-const next = document.querySelector('#next')
-const prev = document.querySelector('#prev')
-let index = 0
+    const nextSlide = () => {
+        currentSlide = (currentSlide + 1) % slides.length;
+        showSlide(currentSlide);
+    };
 
-const hideSlide = () => {
-    slides.forEach((slide) => {
-        slide.style.opacity = 0
-        slide.classList.remove('active_slide')
-    })
-}
-const showSlide = (i = 0) => {
-    slides[i].style.opacity = 1
-    slides[i].classList.add('active_slide')
-}
+    const prevSlide = () => {
+        currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+        showSlide(currentSlide);
+    };
 
-hideSlide()
-showSlide(index)
+    const startAutoSlide = () => {
+        autoSlideInterval = setInterval(nextSlide, 5000);
+    };
 
+    const stopAutoSlide = () => clearInterval(autoSlideInterval);
 
-const autoSlider = (i = 0) => {
-    setInterval(() => {
-        i++
-        if (i > slides.length - 1) {
-            i = 0
-        }
-        hideSlide()
-        showSlide(i)
-    }, 10000)
-}
+    nextBtn.addEventListener('click', () => {
+        nextSlide();
+        stopAutoSlide();
+        startAutoSlide();
+    });
 
-next.onclick = () => {
-    index < slides.length - 1 ? index++ : index = 0
-    hideSlide()
-    showSlide(index)
-}
+    prevBtn.addEventListener('click', () => {
+        prevSlide();
+        stopAutoSlide();
+        startAutoSlide();
+    });
 
-prev.onclick = () => {
-    index > 0 ? index-- : index = slides.length - 1
-    hideSlide()
-    showSlide(index)
-}
+    showSlide(currentSlide);
+    startAutoSlide();
 
-autoSlider(index)
+    document.querySelector('.slider').addEventListener('mouseenter', stopAutoSlide);
+    document.querySelector('.slider').addEventListener('mouseleave', startAutoSlide);
+});
+

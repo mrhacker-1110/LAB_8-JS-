@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send HW | RadoMir</title>
+    <link rel="stylesheet" href="../css/core.css">
+    <link rel="stylesheet" href="../css/send_hw.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="wrapper">
+
+    <!-- HEADER — ТОЧНО КАК В lessons.html -->
+    <header class="header">
+        <div class="container">
+            <div class="header__inner">
+                <!-- ЛОГОТИП -->
+                <a href="../index.html" class="logo">
+                    <h2>Java<span>Script</span></h2>
+                </a>
+
+                <!-- МЕНЮ -->
+                <nav class="nav">
+                    <ul class="nav__list">
+                        <li class="nav__item"><a href="../pages/home_works.html" class="nav__link">Homework</a></li>
+                        <li class="nav__item"><a href="../pages/lessons.html" class="nav__link">Lessons</a></li>
+                        <li class="nav__item"><a href="send_hw.html" class="nav__link send-hw active">Send HW</a></li>
+                    </ul>
+                </nav>
+
+                <!-- КНОПКА НАЗАД -->
+                <button class="btn back-btn" onclick="history.back()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+                    </svg>
+                    Назад
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- SEND HW PREMIUM -->
+    <section class="send-hw-premium">
+        <div class="container">
+            <div class="send-hw-grid">
+                <!-- ФОРМА -->
+                <div class="form-section">
+                    <h1>Отправь ДЗ</h1>
+                    <p class="subtitle">Я проверю и дам фидбек в течение 24 часов</p>
+
+                    <form id="send-hw-form" class="premium-form">
+                        <div class="input-group">
+                            <input type="text" name="name" placeholder="Твоё имя" required>
+                            <span class="input-icon">👤</span>
+                        </div>
+                        <div class="input-group">
+                            <input type="email" name="email" placeholder="Email для ответа" required>
+                            <span class="input-icon">✉️</span>
+                        </div>
+                        <div class="input-group">
+                            <input type="text" name="lesson" placeholder="Номер урока" required>
+                            <span class="input-icon">📚</span>
+                        </div>
+                        <div class="input-group">
+                            <textarea name="message" placeholder="Ссылка на код / описание" rows="4" required></textarea>
+                            <span class="input-icon">💬</span>
+                        </div>
+                        <button type="submit" class="submit-btn">
+                            <span>Отправить ДЗ</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
+                            </svg>
+                        </button>
+                    </form>
+
+                    <div class="success-message" id="success-msg">
+                        <h3>ДЗ отправлено!</h3>
+                        <p>Я получил твою работу. Ожидай фидбек на почте!</p>
+                    </div>
+                </div>
+
+                <!-- ПОРТФОЛИО + QR -->
+                <div class="portfolio-section">
+                    <div class="portfolio-card">
+                        <div class="card-header">
+                            <h3>Моё портфолио</h3>
+                            <span class="badge">PREMIUM</span>
+                        </div>
+                        <div class="portfolio-preview">
+                            <div class="preview-placeholder">
+                                <!-- QR-КОД — 100% РАБОТАЕТ -->
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=https://radomir-portfolio.vercel.app" alt="QR Code to Portfolio">
+                                <p>Отсканируй или кликни ниже</p>
+                            </div>
+                            <a href="../pages/fin.html" target="_blank" class="portfolio-link">
+                                radomir-portfolio.vercel.app
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zM4.5 7.5a.5.5 0 0 1 0-1h5.793L8.146 4.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5z"/>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="inner_footer">
+                <h2>Made with 🔥 by KUBA</h2>
+            </div>
+        </div>
+    </footer>
+</div>
+
+<!-- JS ДЛЯ ФОРМЫ + БУРГЕР -->
+<script>
+    // БУРГЕР-МЕНЮ
+    const menuToggle = document.createElement('button');
+    menuToggle.className = 'menu-toggle';
+    menuToggle.innerHTML = '☰';
+    document.querySelector('.header__inner').insertBefore(menuToggle, document.querySelector('.nav'));
+
+    const nav = document.querySelector('.nav');
+    menuToggle.onclick = () => nav.classList.toggle('active');
+
+    // ФОРМА ОТПРАВКИ
+    const form = document.getElementById('send-hw-form');
+    const successMsg = document.getElementById('success-msg');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const submitBtn = form.querySelector('.submit-btn');
+        submitBtn.innerHTML = '<span>Отправляю...</span>';
+        submitBtn.disabled = true;
+
+        try {
+            const response = await fetch('https://formspree.io/f/xdknwpva', {
+                method: 'POST',
+                body: new FormData(form),
+                headers: { 'Accept': 'application/json' }
+            });
+
+            if (response.ok) {
+                form.style.display = 'none';
+                successMsg.style.display = 'block';
+            } else {
+                alert('Ошибка. Попробуй ещё раз.');
+            }
+        } catch (err) {
+            alert('Нет интернета.');
+        } finally {
+            submitBtn.innerHTML = '<span>Отправить ДЗ</span><svg>...</svg>';
+            submitBtn.disabled = false;
+        }
+    });
+</script>
+
+</body>
+</html>

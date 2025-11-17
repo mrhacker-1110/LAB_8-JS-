@@ -1,260 +1,202 @@
-window.requestAnimFrame = () => {
-    return (
-        window.requestAnimationFrame || function (callback) {
-            window.setTimeout(callback);
-        }
-    );
-};
+// Smooth requestAnimationFrame
+window.requestAnimFrame = (function () {
+    return window.requestAnimationFrame || function (callback) {
+        window.setTimeout(callback, 1000 / 60);
+    };
+})();
 
 function init(elemId) {
-    let canvas = document.getElementById(elemId),
-        c = canvas.getContext("2d"),
-        w = (canvas.width = window.innerWidth),
-        h = (canvas.height = window.innerHeight);
-    c.fillStyle = "rgba(30,30,30,1)";
+    const canvas = document.getElementById(elemId);
+    const c = canvas.getContext("2d");
+    let w = canvas.width = window.innerWidth;
+    let h = canvas.height = window.innerHeight;
+    c.fillStyle = "rgba(10,10,10,1)";
     c.fillRect(0, 0, w, h);
-    return {c: c, canvas: canvas};
+    return { c, canvas, w, h };
 }
 
 window.onload = function () {
-    let c = init("canvas").c,
-        canvas = init("canvas").canvas,
-        w = (canvas.width = window.innerWidth),
-        h = (canvas.height = window.innerHeight),
-        mouse = {x: false, y: false},
-        last_mouse = {};
+    const { c, canvas, w: initialW, h: initialH } = init("canvas");
+    let w = initialW, h = initialH;
+    let mouse = { x: false, y: false };
+    let last_mouse = {};
+    let target = { x: w / 2, y: h / 2 };
+    let last_target = { x: w / 2, y: h / 2 };
+    let t = 0;
 
+    // Distance helper
     function dist(p1x, p1y, p2x, p2y) {
         return Math.sqrt(Math.pow(p2x - p1x, 2) + Math.pow(p2y - p1y, 2));
     }
 
-    class segment {
-        constructor(parent, l, a, first) {
-            if (first) {
-                this.pos = {
-                    x: parent.x,
-                    y: parent.y
-                };
-            } else {
-                this.pos = {
-                    x: parent.nextPos.x,
-                    y: parent.nextPos.y
-                };
-            }
-            this.l = l;
-            this.ang = a;
+    // Segment class
+    class Segment {
+        constructor(parent, length, angle, isFirst) {
+            this.length = length;
+            this.angle = angle;
+            this.pos = isFirst 
+                ? { x: parent.x, y: parent.y }
+                : { x: parent.nextPos.x, y: parent.nextPos.y };
+            this.updateNextPos();
+        }
+
+        updateNextPos() {
             this.nextPos = {
-                x: this.pos.x + this.l * Math.cos(this.ang),
-                y: this.pos.y + this.l * Math.sin(this.ang)
+                x: this.pos.x + this.length * Math.cos(this.angle),
+                y: this.pos.y + this.length * Math.sin(this.angle)
             };
         }
 
-        update(t) {
-            this.ang = Math.atan2(t.y - this.pos.y, t.x - this.pos.x);
-            this.pos.x = t.x + this.l * Math.cos(this.ang - Math.PI);
-            this.pos.y = t.y + this.l * Math.sin(this.ang - Math.PI);
-            this.nextPos.x = this.pos.x + this.l * Math.cos(this.ang);
-            this.nextPos.y = this.pos.y + this.l * Math.sin(this.ang);
+        update(target) {
+            this.angle = Math.atan2(target.y - this.pos.y, target.x - this.pos.x);
+            this.pos.x = target.x + this.length * Math.cos(this.angle - Math.PI);
+            this.pos.y = target.y + this.length * Math.sin(this.angle - Math.PI);
+            this.updateNextPos();
         }
 
-        fallback(t) {
-            this.pos.x = t.x;
-            this.pos.y = t.y;
-            this.nextPos.x = this.pos.x + this.l * Math.cos(this.ang);
-            this.nextPos.y = this.pos.y + this.l * Math.sin(this.ang);
+        fallback(target) {
+            this.pos.x = target.x;
+            this.pos.y = target.y;
+            this.updateNextPos();
         }
 
-        show() {
+        draw() {
             c.lineTo(this.nextPos.x, this.nextPos.y);
         }
     }
 
-    class tentacle {
-        constructor(x, y, l, n) {
+    // Tentacle class
+    class Tentacle {
+        constructor(x, y, totalLength, segmentsCount) {
             this.x = x;
-            this.y = y;
-            this.l = l;
-            this.n = n;
-            this.t = {};
+            this.y = = y;
+            this.totalLength = totalLength;
+            this.segmentsCount = segmentsCount;
             this.rand = Math.random();
-            this.segments = [new segment(this, this.l / this.n, 0, true)];
-            for (let i = 1; i < this.n; i++) {
-                this.segments.push(
-                    new segment(this.segments[i - 1], this.l / this.n, 0, false)
-                );
+            this.segments = [];
+            const segLength = totalLength / segmentsCount;
+
+            let prev = { x, y };
+            for (let i = 0; i < segmentsCount; i++) {
+                const isFirst = i === 0;
+                const seg = new Segment(prev, segLength, 0, isFirst);
+                this.segments.push(seg);
+                prev = seg;
             }
         }
 
-        move(last_target, target) {
-            this.angle = Math.atan2(target.y - this.y, target.x - this.x);
-            this.dt = dist(last_target.x, last_target.y, target.x, target.y) + 5;
-            this.t = {
-                x: target.x - 0.8 * this.dt * Math.cos(this.angle),
-                y: target.y - 0.8 * this.dt * Math.sin(this.angle)
+        move(lastTarget, currentTarget) {
+            const angle = Math.atan2(currentTarget.y - this.y, currentTarget.x - this.x);
+            const distance = dist(lastTarget.x, lastTarget.y, currentTarget.x, currentTarget.y) + 5;
+            const targetPoint = {
+                x: currentTarget.x - 0.8 * distance * Math.cos(angle),
+                y: currentTarget.y - 0.8 * distance * Math.sin(angle)
             };
-            if (this.t.x) {
-                this.segments[this.n - 1].update(this.t);
-            } else {
-                this.segments[this.n - 1].update(target);
-            }
-            for (let i = this.n - 2; i >= 0; i--) {
+
+            // Update from tip to base
+            this.segments[this.segmentsCount - 1].update(targetPoint);
+            for (let i = this.segmentsCount - 2; i >= 0; i--) {
                 this.segments[i].update(this.segments[i + 1].pos);
             }
-            if (
-                dist(this.x, this.y, target.x, target.y) <=
-                this.l + dist(last_target.x, last_target.y, target.x, target.y)
-            ) {
-                this.segments[0].fallback({x: this.x, y: this.y});
-                for (let i = 1; i < this.n; i++) {
+
+            // Fallback if too far
+            if (dist(this.x, this.y, currentTarget.x, currentTarget.y) <= this.totalLength + distance) {
+                this.segments[0].fallback({ x: this.x, y: this.y });
+                for (let i = 1; i < this.segmentsCount; i++) {
                     this.segments[i].fallback(this.segments[i - 1].nextPos);
                 }
             }
         }
 
-        show(target) {
-            if (dist(this.x, this.y, target.x, target.y) <= this.l) {
-                c.globalCompositeOperation = "lighter";
-                c.beginPath();
-                c.lineTo(this.x, this.y);
-                for (let i = 0; i < this.n; i++) {
-                    this.segments[i].show();
-                }
-                c.strokeStyle =
-                    "hsl(" +
-                    (this.rand * 60 + 180) +
-                    ",100%," +
-                    (this.rand * 60 + 25) +
-                    "%)";
-                c.lineWidth = this.rand * 2;
-                c.lineCap = "round";
-                c.lineJoin = "round";
-                c.stroke();
-                c.globalCompositeOperation = "source-over";
-            }
+        draw(target) {
+            if (dist(this.x, this.y, target.x, target.y) > this.totalLength) return;
+
+            c.globalCompositeOperation = "lighter";
+            c.beginPath();
+            c.moveTo(this.x, this.y);
+            this.segments.forEach(seg => seg.draw());
+            c.strokeStyle = `hsl(${this.rand * 60 + 180}, 100%, ${this.rand * 60 + 25}%)`;
+            c.lineWidth = this.rand * 3 + 1;
+            c.lineCap = c.lineJoin = "round";
+            c.stroke();
+            c.globalCompositeOperation = "source-over";
         }
 
-        show2(target) {
+        drawBase(target) {
             c.beginPath();
-            if (dist(this.x, this.y, target.x, target.y) <= this.l) {
-                c.arc(this.x, this.y, 2 * this.rand + 1, 0, 2 * Math.PI);
-                c.fillStyle = "white";
-            } else {
-                c.arc(this.x, this.y, this.rand * 2, 0, 2 * Math.PI);
-                c.fillStyle = "darkcyan";
-            }
+            const inRange = dist(this.x, this.y, target.x, target.y) <= this.totalLength;
+            c.arc(this.x, this.y, inRange ? 3 + this.rand * 2 : this.rand * 2, 0, Math.PI * 2);
+            c.fillStyle = inRange ? "white" : "#006666";
             c.fill();
         }
     }
 
-    let maxL = 300,
-        minL = 50,
-        n = 30,
-        numT = 500,
-        tent = [],
-        clicked = false,
-        target = {x: 0, y: 0},
-        last_target = {},
-        t = 0,
-        q = 10;
+    // Create tentacles
+    const maxLength = 300, minLength = 50, segments = 30, count = 500;
+    const tentacles = [];
 
-    for (let i = 0; i < numT; i++) {
-        tent.push(
-            new tentacle(
-                Math.random() * w,
-                Math.random() * h,
-                Math.random() * (maxL - minL) + minL,
-                n,
-                Math.random() * 2 * Math.PI
-            )
-        );
+    for (let i = 0; i < count; i++) {
+        tentacles.push(new Tentacle(
+            Math.random() * w,
+            Math.random() * h,
+            Math.random() * (maxLength - minLength) + minLength,
+            segments
+        ));
     }
 
+    // Mouse tracking
+    canvas.addEventListener("mousemove", e => {
+        last_mouse.x = mouse.x;
+        last_mouse.y = mouse.y;
+        mouse.x = e.pageX;
+        mouse.y = e.pageY;
+    });
+
+    canvas.addEventListener("mouseleave", () => {
+        mouse.x = mouse.y = false;
+    });
+
+    // Animation loop
     function draw() {
-        if (mouse.x) {
-            target.errx = mouse.x - target.x;
-            target.erry = mouse.y - target.y;
+        // Update target
+        if (mouse.x !== false) {
+            target.x += (mouse.x - target.x) * 0.1;
+            target.y += (mouse.y - target.y) * 0.1;
         } else {
-            target.errx =
-                w / 2 +
-                ((h / 2 - q) * Math.sqrt(2) * Math.cos(t)) /
-                (Math.pow(Math.sin(t), 2) + 1) -
-                target.x;
-            target.erry =
-                h / 2 +
-                ((h / 2 - q) * Math.sqrt(2) * Math.cos(t) * Math.sin(t)) /
-                (Math.pow(Math.sin(t), 2) + 1) -
-                target.y;
+            t += 0.01;
+            target.x = w / 2 + ((h / 2 - 100) * Math.sqrt(2) * Math.cos(t)) / (Math.pow(Math.sin(t), 2) + 1);
+            target.y = h / 2 + ((h / 2 - 100) * Math.sqrt(2) * Math.cos(t) * Math.sin(t)) / (Math.pow(Math.sin(t), 2) + 1);
         }
 
-        target.x += target.errx / 10;
-        target.y += target.erry / 10;
-
-        t += 0.01;
-
+        // Draw target glow
         c.beginPath();
-        c.arc(
-            target.x,
-            target.y,
-            dist(last_target.x, last_target.y, target.x, target.y) + 5,
-            0,
-            2 * Math.PI
-        );
-        c.fillStyle = "hsl(210,100%,80%)";
+        c.arc(target.x, target.y, dist(last_target.x, last_target.y, target.x, target.y) + 8, 0, Math.PI * 2);
+        c.fillStyle = "rgba(100, 200, 255, 0.3)";
         c.fill();
 
-        for (let i = 0; i < numT; i++) {
-            tent[i].move(last_target, target);
-            tent[i].show2(target);
-        }
-        for (let i = 0; i < numT; i++) {
-            tent[i].show(target);
-        }
+        // Draw tentacles
+        tentacles.forEach(tent => {
+            tent.move(last_target, target);
+            tent.drawBase(target);
+        });
+        tentacles.forEach(tent => tent.draw(target));
+
         last_target.x = target.x;
         last_target.y = target.y;
     }
 
-    canvas.addEventListener("mousemove", function (e) {
-            last_mouse.x = mouse.x;
-            last_mouse.y = mouse.y;
-
-            mouse.x = e.pageX - this.offsetLeft;
-            mouse.y = e.pageY - this.offsetTop;
-        }, false
-    );
-
-    canvas.onmouseleave = () => {
-        mouse.x = false;
-        mouse.y = false;
-    }
-
-    canvas.addEventListener(
-        "mousedown",
-        function () {
-            clicked = true;
-        },
-        false
-    );
-
-    canvas.addEventListener(
-        "mouseup",
-        function () {
-            clicked = false;
-        },
-        false
-    );
-
     function loop() {
-        window.requestAnimFrame(loop);
-        c.clearRect(0, 0, w, h);
+        requestAnimFrame(loop);
+        c.fillStyle = "rgba(10, 10, 10, 0.1)";
+        c.fillRect(0, 0, w, h);
         draw();
     }
 
-    window.addEventListener("resize", function () {
-        (w = canvas.width = window.innerWidth);
-        (h = canvas.height = window.innerHeight);
-        loop();
+    // Resize handler
+    window.addEventListener("resize", () => {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
     });
 
     loop();
-    setInterval(loop, 1000 / 60);
 };
